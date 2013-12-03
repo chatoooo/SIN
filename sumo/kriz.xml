@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<add>
+    <tlLogic id="0" type="static" programID="basic" offset="54000">
+        <phase duration="10" state="rrrrrrGGG" minDur="5" maxDur="20"/>
+        <phase duration="10" state="rrrrrrGGG" minDur="5" maxDur="20"/>
+        <phase duration="10" state="rrrrrrGGG" minDur="5" maxDur="20"/>
+        <phase duration="10" state="rrrrrrGyy" minDur="5" maxDur="20"/>
+        <phase duration="10" state="GGGGGggrr" minDur="5" maxDur="20"/>
+        <phase duration="10" state="GGGGGggrr" minDur="5" maxDur="20"/>
+        <phase duration="10" state="GGGGGggrr" minDur="5" maxDur="20"/>
+        <phase duration="10" state="yyyGGggrr" minDur="5" maxDur="20"/>
+        <phase duration="10" state="rrrGGGGrr" minDur="5" maxDur="20"/>
+        <phase duration="10" state="rrrGGGGrr" minDur="5" maxDur="20"/>
+        <phase duration="10" state="rrryyyGrr" minDur="5" maxDur="20"/>
+    </tlLogic>
+</add>
+

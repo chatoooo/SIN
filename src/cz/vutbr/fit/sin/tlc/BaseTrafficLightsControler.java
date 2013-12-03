@@ -3,7 +3,7 @@ package cz.vutbr.fit.sin.tlc;
 import it.polito.appeal.traci.TrafficLight;
 
 public abstract class BaseTrafficLightsControler implements
-		ITrafficLightControler {
+		ITrafficLightController {
 	
 	protected TrafficLight mTrafficLight;
 	protected int mTime;
@@ -19,7 +19,7 @@ public abstract class BaseTrafficLightsControler implements
 	}
 	
 	@Override
-	public void incTime() {
+	public void step() {
 		mTime++;
 	}
 

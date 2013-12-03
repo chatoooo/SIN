@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edges>
+
+   <edge id="1i" from="1" to="0" priority="1" numLanes="3" speed="60">
+      <split pos="0" lanes="0 1"/>
+      <split pos="185" lanes="0 1 2"/>
+   </edge>
+   <edge id="1o" from="0" to="1" priority="1" numLanes="2" speed="60"/>
+
+   <edge id="2i" from="2" to="0" priority="1" numLanes="3" speed="60">
+      <split pos="0" lanes="1 2"/>
+      <split pos="150" lanes="0 1 2"/>
+   </edge>
+   <edge id="2o" from="0" to="2" priority="1" numLanes="3" speed="60">
+      <split pos="0" lanes="0 1"/>
+   </edge>
+   
+   <edge id="3i" from="3" to="0" priority="1" numLanes="3" speed="60">
+      <split pos="150" lanes="0 1 2"/>
+      <split pos="0" lanes="0 1"/>
+   </edge>
+   
+   <edge id="3o" from="0" to="3" priority="1" numLanes="2" speed="60"/>
+
+</edges>
