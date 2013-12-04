@@ -19,13 +19,12 @@ public class MainRunner {
 		try {
 			SumoTraciConnection con = new SumoTraciConnection(InetAddress.getLoopbackAddress(),56789);
 			TrafficLight lights = con.getTrafficLightRepository().getByID("0");
-			ITrafficLightController controler = new TrafficLightControllerTL0(lights);
-
+			ITrafficLightController controler = new TrafficLightControllerTL0(lights,con.getInductionLoopRepository());
+			
 			for(int i = 0;i<900;i++){
 				con.nextSimStep();
 				int current_step = con.getCurrentSimStep();
 				controler.step();
-				
 			}
 			con.close();
 		} catch (InterruptedException e) {
