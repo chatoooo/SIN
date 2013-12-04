@@ -1,0 +1,7 @@
+<additional xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo-sim.org/xsd/additional_file.xsd">
+  <busStop id="busstop1" lane="1i_0" startPos="50" endPos="75" lines="25 26 27"/>
+  <busStop id="busstop2" lane="3i_0" startPos="20" endPos="45" lines="25 26 84"/>
+  <busStop id="busstop3" lane="2o_0" startPos="50" endPos="75" lines="25 26 27 84"/>
+  <busStop id="busstop4" lane="3o_0" startPos="150" endPos="175" lines="25 26 27 44"/>
+  <busStop id="busstop5" lane="1o_0" startPos="150" endPos="175" lines="25 26 27"/>
+</additional>

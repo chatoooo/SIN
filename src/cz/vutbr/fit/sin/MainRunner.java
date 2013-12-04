@@ -21,12 +21,13 @@ public class MainRunner {
 			TrafficLight lights = con.getTrafficLightRepository().getByID("0");
 			ITrafficLightController controler = new TrafficLightControllerTL0(lights);
 
-			for(int i = 0;i<200;i++){
+			for(int i = 0;i<900;i++){
 				con.nextSimStep();
 				int current_step = con.getCurrentSimStep();
 				controler.step();
 				
 			}
+			con.close();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
