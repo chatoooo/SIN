@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <add>
-    <instantInductionLoop id="loop1_1_0" lane="1i.185_1" pos="-10" freq="10" file="NUL"/>
-    <instantInductionLoop id="loop1_1_1" lane="1i_1" pos="-50" freq="10" file="NUL"/>
-    <instantInductionLoop id="loop1_1_2" lane="1i_1" pos="-100" freq="10" file="NUL"/>
+    <inductionLoop id="loop1_1_20" lane="1i.185_1" pos="-10" freq="1" file="NUL"/>
+    <inductionLoop id="loop1_1_50" lane="1i_1" pos="-50" freq="1" file="NUL"/>
+    <inductionLoop id="loop1_1_100" lane="1i_1" pos="-100" freq="1" file="NUL"/>
     
-    <instantInductionLoop id="loop1_2_0" lane="1i.185_2" pos="-10" freq="10" file="NUL"/>
+    <inductionLoop id="loop1_2_20" lane="1i.185_2" pos="-10" freq="1" file="NUL"/>
     
-    <instantInductionLoop id="loop2_0_0" lane="2i.150_0" pos="-20" freq="10" file="NUL"/>
-    <instantInductionLoop id="loop2_0_1" lane="2i_0" pos="-50" freq="10" file="NUL"/>
-    <instantInductionLoop id="loop2_0_2" lane="2i_0" pos="-100" freq="10" file="NUL"/>
+    <inductionLoop id="loop2_0_20" lane="2i.150_0" pos="-20" freq="1" file="NUL"/>
+    <inductionLoop id="loop2_0_50" lane="2i_0" pos="-50" freq="1" file="NUL"/>
+    <inductionLoop id="loop2_0_100" lane="2i_0" pos="-100" freq="1" file="NUL"/>
     
-    <instantInductionLoop id="loop2_1_0" lane="2i.150_1" pos="-20" freq="10" file="NUL"/>
-    <instantInductionLoop id="loop2_1_1" lane="2i_1" pos="-50" freq="10" file="NUL"/>
-    <instantInductionLoop id="loop2_1_2" lane="2i_1" pos="-100" freq="10" file="NUL"/>
+    <inductionLoop id="loop2_1_20" lane="2i.150_1" pos="-20" freq="1" file="NUL"/>
+    <inductionLoop id="loop2_1_50" lane="2i_1" pos="-50" freq="1" file="NUL"/>
+    <inductionLoop id="loop2_1_100" lane="2i_1" pos="-100" freq="1" file="NUL"/>
     
-    <instantInductionLoop id="loop2_2_0" lane="2i.150_2" pos="-20" freq="10" file="NUL"/>
+    <inductionLoop id="loop2_2_20" lane="2i.150_2" pos="-20" freq="1" file="NUL"/>
     
-    <instantInductionLoop id="loop3_0_0" lane="3i.150_0" pos="-20" freq="10" file="NUL"/>
-    <instantInductionLoop id="loop3_0_1" lane="3i_0" pos="-50" freq="10" file="NUL"/>
-    <instantInductionLoop id="loop3_0_2" lane="3i_0" pos="-100" freq="10" file="NUL"/>
+    <inductionLoop id="loop3_0_20" lane="3i.150_0" pos="-20" freq="1" file="NUL"/>
+    <inductionLoop id="loop3_0_50" lane="3i_0" pos="-50" freq="1" file="NUL"/>
+    <inductionLoop id="loop3_0_100" lane="3i_0" pos="-100" freq="1" file="NUL"/>
     
-    <instantInductionLoop id="loop3_1_0" lane="3i.150_1" pos="-20" freq="10" file="NUL"/>
-    <instantInductionLoop id="loop3_1_1" lane="3i_1" pos="-50" freq="10" file="NUL"/>
-    <instantInductionLoop id="loop3_1_2" lane="3i_1" pos="-100" freq="10" file="NUL"/>
+    <inductionLoop id="loop3_1_20" lane="3i.150_1" pos="-20" freq="1" file="NUL"/>
+    <inductionLoop id="loop3_1_50" lane="3i_1" pos="-50" freq="1" file="NUL"/>
+    <inductionLoop id="loop3_1_100" lane="3i_1" pos="-100" freq="1" file="NUL"/>
     
-    <instantInductionLoop id="loop3_2_0" lane="3i.150_2" pos="-20" freq="10" file="NUL"/>
+    <inductionLoop id="loop3_2_20" lane="3i.150_2" pos="-20" freq="1" file="NUL"/>
 </add>
 
