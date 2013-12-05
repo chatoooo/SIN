@@ -1,5 +1,7 @@
 package cz.vutbr.fit.sin;
 
+import it.polito.appeal.traci.InductionLoop;
+import it.polito.appeal.traci.Repository;
 import it.polito.appeal.traci.SumoTraciConnection;
 import it.polito.appeal.traci.TrafficLight;
 
@@ -19,7 +21,8 @@ public class SimulationRunner {
 			try {
 				SumoTraciConnection con = new SumoTraciConnection(InetAddress.getLoopbackAddress(), SUMO_PORT);
 				TrafficLight lights = con.getTrafficLightRepository().getByID("0");
-				ITrafficLightController controler = new TrafficLightControllerTL0(lights);
+				Repository<InductionLoop> loops = con.getInductionLoopRepository();
+				ITrafficLightController controler = new TrafficLightControllerTL0(lights, loops);
 					
 				for(int i = 0;i<900;i++){
 					con.nextSimStep();
