@@ -1,0 +1,85 @@
+// Block definition (there may be more than one block per file)
+FUNCTION_BLOCK Crossroad
+
+// Definice vstupu - delky front
+VAR_INPUT				
+	zidToMal : REAL;	// delka fronty Zidenice -> Malomerice
+	malToZid : REAL;	// delka fronty Malomerice -> Zidenice 
+	vinToZid : REAL;	// delka fronty Vinohrady -> Zidenice  
+END_VAR
+
+// Definice vystupnich hodnot
+VAR_OUTPUT
+    gZidToMal : REAL;  // doba zelene na semaforu Zidenice -> Malomerice
+    gMalToZid : REAL;  // doba zelene na semaforu Malomerice -> Zidenice
+    gVinToZid : REAL;  // doba zelene na semaforu Vinohrady -> Zidenice
+END_VAR
+
+FUZZIFY zidToMal
+    TERM short := (0, 1) (4, 1) (6, 0) ; 
+    TERM medium := (4, 0) (6, 1) (10, 1) (12, 0);
+    TERM long := (10, 0) (12, 1) (20, 1);
+END_FUZZIFY
+
+FUZZIFY malToZid
+    TERM short := (0, 1) (4, 1) (6, 0) ; 
+    TERM medium := (4, 0) (6, 1) (10, 1) (12, 0);
+    TERM long := (10, 0) (12, 1) (20, 1);
+END_FUZZIFY
+
+
+FUZZIFY vinToZid
+    TERM short := (0, 1) (4, 1) (5, 0) ; 
+    TERM medium := (4, 0) (5, 1) (9, 1) (11, 0);
+    TERM long := (9, 0) (11, 1) (17, 1);
+END_FUZZIFY
+
+DEFUZZIFY gZidToMal
+    TERM gShort := (0,0) (5,1) (10,0);
+	TERM gMedium := (10,0) (15,1) (20,0);
+	TERM gLong := (20,0) (25,1) (30,0);
+	METHOD : COG;		// Use 'Center Of Gravity' defuzzification method
+	DEFAULT := 15;		// Default value is 5 (if no rule activates defuzzifier)
+END_DEFUZZIFY
+
+DEFUZZIFY gMalToZid
+    TERM gShort := (0,0) (5,1) (10,0);
+	TERM gMedium := (10,0) (15,1) (20,0);
+	TERM gLong := (20,0) (25,1) (30,0);
+	METHOD : COG;		// Use 'Center Of Gravity' defuzzification method
+	DEFAULT := 15;		// Default value is 5 (if no rule activates defuzzifier)
+END_DEFUZZIFY
+
+DEFUZZIFY gVinToZid
+    TERM gShort := (0,0) (5,1) (10,0);
+	TERM gMedium := (10,0) (15,1) (20,0);
+	TERM gLong := (20,0) (25,1) (30,0);
+	METHOD : COG;		// Use 'Center Of Gravity' defuzzification method
+	DEFAULT := 15;		// Default value is 5 (if no rule activates defuzzifier)
+END_DEFUZZIFY
+
+RULEBLOCK Rule1
+	AND : MIN;	// Use 'min' for 'and'
+	ACT : MIN;	// Use 'min' activation method
+	ACCU : MAX;	// Use 'max' accumulation method
+
+	// smer Vinohrandy -> Zidenice
+	RULE 1 : IF vinToZid IS short THEN gVinToZid IS gShort;
+	RULE 2 : IF vinToZid IS medium THEN gVinToZid IS gMedium;
+	RULE 3 : IF vinToZid IS long THEN gVinToZid IS gLong;
+	
+	// smer Zidenice -> Malomerice
+	RULE 4 : IF zidToMal IS short THEN gZidToMal IS gShort;
+	RULE 5 : IF zidToMal IS medium THEN gZidToMal IS gMedium;
+	RULE 6 : IF zidToMal IS long THEN gZidToMal IS gLong;
+	
+	// smer Malomerice -> Zidenice
+	RULE 7 : IF zidToMal IS short AND malToZid IS short THEN gMalToZid IS gShort;
+	RULE 8 : IF zidToMal IS short AND malToZid IS medium THEN gMalToZid IS gMedium;
+	RULE 9 : IF zidToMal IS short AND malToZid IS long THEN gMalToZid IS gLong;
+	RULE 10 : IF zidToMal IS medium AND malToZid IS short OR malToZid IS medium THEN gMalToZid IS gMedium;
+	RULE 11 : IF zidToMal IS medium AND malToZid IS long THEN gMalToZid IS gLong;
+	RULE 12 : IF zidToMal IS long THEN gMalToZid IS gLong;	
+END_RULEBLOCK	
+	
+END_FUNCTION_BLOCK
