@@ -16,44 +16,43 @@ VAR_OUTPUT
 END_VAR
 
 FUZZIFY zidToMal
-    TERM short := (0, 1) (4, 1) (6, 0) ; 
-    TERM medium := (4, 0) (6, 1) (10, 1) (12, 0);
-    TERM long := (10, 0) (12, 1) (20, 1);
+    TERM short := (0, 1) (20, 1) (25, 0); 
+    TERM medium := (20, 0) (24, 1) (70, 1) (75, 0);
+    TERM long := (70, 0) (75, 1) (100, 1);
 END_FUZZIFY
 
 FUZZIFY malToZid
-    TERM short := (0, 1) (4, 1) (6, 0) ; 
-    TERM medium := (4, 0) (6, 1) (10, 1) (12, 0);
-    TERM long := (10, 0) (12, 1) (20, 1);
+    TERM short := (0, 1) (20, 1) (25, 0); 
+    TERM medium := (20, 0) (24, 1) (70, 1) (75, 0);
+    TERM long := (70, 0) (75, 1) (100, 1);
 END_FUZZIFY
 
-
 FUZZIFY vinToZid
-    TERM short := (0, 1) (4, 1) (5, 0) ; 
-    TERM medium := (4, 0) (5, 1) (9, 1) (11, 0);
-    TERM long := (9, 0) (11, 1) (17, 1);
+    TERM short := (0, 1) (20, 1) (25, 0); 
+    TERM medium := (20, 0) (24, 1) (70, 1) (75, 0);
+    TERM long := (70, 0) (75, 1) (100, 1);
 END_FUZZIFY
 
 DEFUZZIFY gZidToMal
-    TERM gShort := (0,0) (5,1) (10,0);
-	TERM gMedium := (10,0) (15,1) (20,0);
-	TERM gLong := (20,0) (25,1) (30,0);
+    TERM gShort := (10,0) (15,1) (20,0);
+	TERM gMedium := (20,0) (25,1) (30,0);
+	TERM gLong := (30,0) (35,1) (40,0);
 	METHOD : COG;		// Use 'Center Of Gravity' defuzzification method
 	DEFAULT := 15;		// Default value is 5 (if no rule activates defuzzifier)
 END_DEFUZZIFY
 
 DEFUZZIFY gMalToZid
-    TERM gShort := (0,0) (5,1) (10,0);
-	TERM gMedium := (10,0) (15,1) (20,0);
-	TERM gLong := (20,0) (25,1) (30,0);
+    TERM gShort := (10,0) (15,1) (20,0);
+	TERM gMedium := (20,0) (25,1) (30,0);
+	TERM gLong := (30,0) (35,1) (40,0);
 	METHOD : COG;		// Use 'Center Of Gravity' defuzzification method
 	DEFAULT := 15;		// Default value is 5 (if no rule activates defuzzifier)
 END_DEFUZZIFY
 
 DEFUZZIFY gVinToZid
-    TERM gShort := (0,0) (5,1) (10,0);
-	TERM gMedium := (10,0) (15,1) (20,0);
-	TERM gLong := (20,0) (25,1) (30,0);
+    TERM gShort := (10,0) (15,1) (20,0);
+	TERM gMedium := (20,0) (25,1) (30,0);
+	TERM gLong := (30,0) (35,1) (40,0);
 	METHOD : COG;		// Use 'Center Of Gravity' defuzzification method
 	DEFAULT := 15;		// Default value is 5 (if no rule activates defuzzifier)
 END_DEFUZZIFY
