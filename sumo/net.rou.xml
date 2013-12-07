@@ -42,7 +42,7 @@
   <flow id="flow3" type="CarA" route="route3" begin="0" end="900" period="20" departLane="random"/>
   <flow id="flow4" type="CarA" route="route4" begin="0" end="900" period="40" departLane="random"/>
   <flow id="flow5" type="CarA" route="route5" begin="0" end="900" period="40" departLane="random"/>
-  <flow id="flow6" type="CarA" route="route6" begin="0" end="900" period="20" departLane="random"/>
+  <flow id="flow6" type="CarA" route="route6" begin="0" end="900" period="40" departLane="random"/>
   
   <flow id="busflow1" type="BUS" route="bus_route1" begin="0" end="900" period="100"/>
   
@@ -51,21 +51,21 @@
   <flow id="flow9" type="CarB" route="route3" begin="2" end="900" period="20" departLane="random"/>
   <flow id="flow10" type="CarB" route="route4" begin="2" end="900" period="40" departLane="random"/>
   <flow id="flow11" type="CarB" route="route5" begin="2" end="900" period="40" departLane="random"/>
-  <flow id="flow12" type="CarB" route="route6" begin="2" end="900" period="20" departLane="random"/>
+  <flow id="flow12" type="CarB" route="route6" begin="2" end="900" period="40" departLane="random"/>
   
   <flow id="flow13" type="CarC" route="route1" begin="4" end="900" period="20" departLane="random"/>
   <flow id="flow14" type="CarC" route="route2" begin="4" end="900" period="20" departLane="random"/>
   <flow id="flow15" type="CarC" route="route3" begin="4" end="900" period="20" departLane="random"/>
   <flow id="flow16" type="CarC" route="route4" begin="4" end="900" period="40" departLane="random"/>
   <flow id="flow17" type="CarC" route="route5" begin="4" end="900" period="40" departLane="random"/>
-  <flow id="flow18" type="CarC" route="route6" begin="4" end="900" period="20" departLane="random"/>
+  <flow id="flow18" type="CarC" route="route6" begin="4" end="900" period="40" departLane="random"/>
    
   <flow id="flow19" type="CarD" route="route1" begin="8" end="900" period="20" departLane="random"/>
   <flow id="flow20" type="CarD" route="route2" begin="8" end="900" period="20" departLane="random"/>
   <flow id="flow21" type="CarD" route="route3" begin="8" end="900" period="20" departLane="random"/>
   <flow id="flow22" type="CarD" route="route4" begin="8" end="900" period="40" departLane="random"/>
   <flow id="flow23" type="CarD" route="route5" begin="8" end="900" period="40" departLane="random"/>
-  <flow id="flow24" type="CarD" route="route6" begin="8" end="900" period="20" departLane="random"/>
+  <flow id="flow24" type="CarD" route="route6" begin="8" end="900" period="40" departLane="random"/>
   
   <flow id="busflow2" type="BUS" route="bus_route2" begin="20" end="900" period="100"/>
   <flow id="busflow3" type="BUS" route="bus_route3" begin="40" end="900" period="100"/>
@@ -75,13 +75,13 @@
   
   
   <flow id="flowPeak1_1" type="CarA" route="route1" begin="302" end="500" period="5" departLane="random"/>
-  <flow id="flowPeak1_5" type="CarA" route="route6" begin="302" end="500" period="20" departLane="random"/>
+  <flow id="flowPeak1_5" type="CarA" route="route6" begin="302" end="500" period="40" departLane="random"/>
   <flow id="flowPeak1_2" type="CarB" route="route1" begin="304" end="500" period="5" departLane="random"/>
-  <flow id="flowPeak1_6" type="CarB" route="route6" begin="304" end="500" period="20" departLane="random"/>
+  <flow id="flowPeak1_6" type="CarB" route="route6" begin="304" end="500" period="40" departLane="random"/>
   <flow id="flowPeak1_3" type="CarC" route="route1" begin="306" end="500" period="5" departLane="random"/>
-  <flow id="flowPeak1_7" type="CarC" route="route6" begin="306" end="500" period="20" departLane="random"/>
+  <flow id="flowPeak1_7" type="CarC" route="route6" begin="306" end="500" period="40" departLane="random"/>
   <flow id="flowPeak1_4" type="CarD" route="route1" begin="308" end="500" period="5" departLane="random"/>
-  <flow id="flowPeak1_8" type="CarD" route="route6" begin="308" end="500" period="20" departLane="random"/>
+  <flow id="flowPeak1_8" type="CarD" route="route6" begin="308" end="500" period="40" departLane="random"/>
   
   <flow id="flowPeak2_1" type="CarA" route="route3" begin="602" end="800" period="10" departLane="random"/>
   <flow id="flowPeak2_2" type="CarB" route="route3" begin="604" end="800" period="10" departLane="random"/>
