@@ -73,5 +73,23 @@
   <flow id="busflow5" type="BUS" route="bus_route5" begin="80" end="900" period="100"/>
   <flow id="busflow6" type="BUS" route="bus_route6" begin="100" end="900" period="100"/>
   
+  
+  <flow id="flowPeak1_1" type="CarA" route="route1" begin="302" end="500" period="10"/>
+  <flow id="flowPeak1_2" type="CarB" route="route1" begin="304" end="500" period="10"/>
+  <flow id="flowPeak1_3" type="CarC" route="route1" begin="306" end="500" period="10"/>
+  <flow id="flowPeak1_4" type="CarD" route="route1" begin="308" end="500" period="10"/>
+  <flow id="flowPeak1_5" type="CarA" route="route6" begin="302" end="500" period="10"/>
+  <flow id="flowPeak1_6" type="CarB" route="route6" begin="304" end="500" period="10"/>
+  <flow id="flowPeak1_7" type="CarC" route="route6" begin="306" end="500" period="10"/>
+  <flow id="flowPeak1_8" type="CarD" route="route6" begin="308" end="500" period="10"/>
+  
+  <flow id="flowPeak2_1" type="CarA" route="route3" begin="602" end="800" period="10"/>
+  <flow id="flowPeak2_2" type="CarB" route="route3" begin="604" end="800" period="10"/>
+  <flow id="flowPeak2_3" type="CarC" route="route3" begin="606" end="800" period="10"/>
+  <flow id="flowPeak2_4" type="CarD" route="route3" begin="608" end="800" period="10"/>
+  <flow id="flowPeak2_5" type="CarA" route="route4" begin="604" end="800" period="20"/>
+  <flow id="flowPeak2_6" type="CarB" route="route4" begin="608" end="800" period="20"/>
+  <flow id="flowPeak2_7" type="CarC" route="route4" begin="612" end="800" period="20"/>
+  <flow id="flowPeak2_8" type="CarD" route="route4" begin="616" end="800" period="20"/>
    
 </routes>

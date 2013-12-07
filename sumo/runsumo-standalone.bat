@@ -1,1 +1,1 @@
-sumo-0.19.0\bin\sumo.exe -c sim.sumocfg --remote-port 56789
+sumo-0.19.0\bin\sumo-gui.exe -c sim.sumocfg

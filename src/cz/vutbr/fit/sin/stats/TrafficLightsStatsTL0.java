@@ -11,8 +11,11 @@ import it.polito.appeal.traci.StepAdvanceListener;
 public class TrafficLightsStatsTL0 implements StepAdvanceListener {
 	
 	private Edge mEdgeZid;
+	private Edge mEdgeZid0;
 	private Edge mEdgeVin;
+	private Edge mEdgeVin0;
 	private Edge mEdgeMal;
+	private Edge mEdgeMal0;
 	private int mTime; 
 	
 	private final List<StatsPoint<Integer>> mZidStat = new LinkedList<StatsPoint<Integer>>();
@@ -25,6 +28,11 @@ public class TrafficLightsStatsTL0 implements StepAdvanceListener {
 			mEdgeMal = repository.getByID("3i");
 			mEdgeZid = repository.getByID("2i");
 			mEdgeVin = repository.getByID("1i");
+			
+			mEdgeMal0 = repository.getByID("3i.150");
+			mEdgeZid0 = repository.getByID("2i.150");
+			mEdgeVin0 = repository.getByID("1i.185");
+			
 			mTime = initTime;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -48,18 +56,18 @@ public class TrafficLightsStatsTL0 implements StepAdvanceListener {
 	public void step(){
 		mTime++;
 		try {
-			int malMax, vinMax, zidMax;
+			int mal, vin, zid;
 			
 						
-			malMax = mEdgeMal.getLastStepVehicleNumber();
+			mal = mEdgeMal.getLastStepVehicleNumber() + mEdgeMal0.getLastStepVehicleNumber();
 			
-			zidMax = mEdgeZid.getLastStepVehicleNumber();
+			zid = mEdgeZid.getLastStepVehicleNumber() + mEdgeZid0.getLastStepVehicleNumber();
 
-			vinMax = mEdgeVin.getLastStepVehicleNumber();
+			vin = mEdgeVin.getLastStepVehicleNumber() + mEdgeVin0.getLastStepVehicleNumber();
 
-			mZidStat.add(new StatsPoint<Integer>(mTime-1, zidMax));
-			mVinStat.add(new StatsPoint<Integer>(mTime-1, vinMax));
-			mMalStat.add(new StatsPoint<Integer>(mTime-1, malMax));
+			mZidStat.add(new StatsPoint<Integer>(mTime-1, zid));
+			mVinStat.add(new StatsPoint<Integer>(mTime-1, vin));
+			mMalStat.add(new StatsPoint<Integer>(mTime-1, mal));
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
