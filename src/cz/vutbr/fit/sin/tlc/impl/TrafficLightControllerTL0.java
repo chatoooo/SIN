@@ -5,7 +5,6 @@ import java.util.ArrayDeque;
 import java.util.Queue;
 
 import net.sourceforge.jFuzzyLogic.FIS;
-import net.sourceforge.jFuzzyLogic.rule.*;
 import it.polito.appeal.traci.LightState;
 import it.polito.appeal.traci.InductionLoop;
 import it.polito.appeal.traci.Repository;
@@ -279,9 +278,9 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 	    double occupancy3_0_20 = movingAverange(mLoop3_0_20Occupancy);
 	    double occupancy3_0_50 = movingAverange(mLoop3_0_50Occupancy);
 	    double occupancy3_0_100 = movingAverange(mLoop3_0_100Occupancy);
-	    double occupancy3_1_20 = movingAverange(mLoop3_0_20Occupancy);
-	    double occupancy3_1_50 = movingAverange(mLoop3_0_50Occupancy);
-	    double occupancy3_1_100 = movingAverange(mLoop3_0_100Occupancy);
+	    double occupancy3_1_20 = movingAverange(mLoop3_1_20Occupancy);
+	    double occupancy3_1_50 = movingAverange(mLoop3_1_50Occupancy);
+	    double occupancy3_1_100 = movingAverange(mLoop3_1_100Occupancy);
 	    
 	    double occupancy3_0 = occupancy3_0_20 + occupancy3_0_50 + occupancy3_0_100;
 	    double occupancy3_1 = occupancy3_1_20 + occupancy3_1_50 + occupancy3_1_100;
@@ -319,14 +318,9 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 	private double get3ito1oOccupancy() {
 	    double occupancy3_0_50 = movingAverange(mLoop3_0_50Occupancy);
 	    double occupancy3_0_100 = movingAverange(mLoop3_0_100Occupancy);
-	    double occupancy3_1_50 = movingAverange(mLoop3_0_50Occupancy);
-	    double occupancy3_1_100 = movingAverange(mLoop3_0_100Occupancy);
 	    double occupancy3_2_20 = movingAverange(mLoop3_2_20Occupancy);
-	    
-	    double occupancy3_0 = occupancy3_0_50 + occupancy3_0_100;
-	    double occupancy3_1 = occupancy3_1_50 + occupancy3_1_100;
 		
-		return (occupancy3_2_20 + occupancy3_0 + occupancy3_1) / 5;
+		return (occupancy3_2_20 + occupancy3_0_50 + occupancy3_0_100) / 3;
 	}
 	
 	private double get1iOccupancy(){
@@ -354,11 +348,12 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 	        mFis.setVariable("zidToMal", get2iOccupancy());
 	        mFis.setVariable("malToZid", get3iOccupancy());
 	        mFis.setVariable("vinToZid", get1iOccupancy());
+	        mFis.setVariable("malToVin", get3ito1oOccupancy());
 			
 	        // Evaluate Fuzzy
 	        mFis.evaluate();
 	        
-	        double vZidToMal, vMalToZid, vVinToZid;
+	        double vZidToMal, vMalToZid, vVinToZid, vMalToVin;
 	        
 			switch(mPhase) {
 				case 0:	// vinToZid - green
@@ -379,18 +374,18 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 					mPhase = 2;
 					break;
 				case 2:	// zidToMal - green, malToZid - green
-					mDuration = 3;
+				    mDuration = 3;
 					mPhase = 3;
 					break;
 				case 3: // zidToMal - yellow, malToZid - green, malToVin - green 
-					vMalToZid = mFis.getVariable("gMalToZid").defuzzify();
-					mDuration = (int)(vMalToZid * 0.2);
+					vMalToVin = mFis.getVariable("gMalToVin").defuzzify();
+					mDuration = (int)(vMalToVin);
 					if(mDuration == 0) {
 						mDuration = 1;
 					}
 					mPhase = 4;
 					break;
-				case 4:	// zidToMal - red,  malToZid - green, malToVin - green
+				case 4:	// zidToMal - red, malToZid - green, malToVin - green
 					mDuration = 3;
 					mPhase = 5;
 					break;
@@ -402,14 +397,6 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 			}
 			LightState[] lightsState = PHASES[mPhase];
 			setTrafficLights(lightsState);
-			
-//			try {
-//				TLState state = mTrafficLight.queryReadState().get();
-//				System.out.println(state);
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
 		}
 		else {
 			mDuration--;
