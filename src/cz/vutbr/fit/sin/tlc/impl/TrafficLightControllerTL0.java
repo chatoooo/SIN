@@ -21,6 +21,8 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 	private int mPhase = 0;
 	private int mDuration = 0;
 	
+	private boolean mEnabled = true;
+	
 	private InductionLoop mLoop1_1_20;
 	private InductionLoop mLoop1_1_50;
 	private InductionLoop mLoop1_1_100;	
@@ -142,8 +144,26 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 	
 	public TrafficLightControllerTL0(TrafficLight light, Repository<InductionLoop> repository) {
 		super(light);
-		init();
+		initFuzzy();
+		initLoops(repository);
 		
+	}
+	
+	public TrafficLightControllerTL0(TrafficLight light, Repository<InductionLoop> repository, int initTime) {
+		super(light, initTime);
+		initFuzzy();
+		initLoops(repository);
+	}
+	
+	public void enable(){
+		mEnabled = true;
+	}
+	
+	public void disable(){
+		mEnabled = false;
+	}
+	
+	private void initLoops(Repository<InductionLoop> repository){
 		try {
 			mLoop1_1_20 = repository.getByID("loop1_1_20");
 			mLoop1_1_50 = repository.getByID("loop1_1_50");
@@ -166,16 +186,11 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 			mLoop3_1_100 = repository.getByID("loop3_1_100");
 			mLoop3_2_20 = repository.getByID("loop3_2_20");		
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	public TrafficLightControllerTL0(TrafficLight light, int initTime) {
-		super(light, initTime);
-	}
-	
-	private void init() {	
+	private void initFuzzy() {	
 		mFis = FIS.load(FUZZY_FILE);
 		
 		if(mFis == null) {
@@ -256,7 +271,6 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 			
 			mCount++;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -329,6 +343,10 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 	@Override
 	public void step(){
 		super.step();
+		
+		if(!mEnabled){
+			return;
+		}
 		recordOccupancy();
 		
 		if(mDuration == 0) {
