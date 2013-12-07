@@ -54,7 +54,7 @@ public class TrafficLightsStatsTL0 implements StepAdvanceListener {
 	}
 	
 	public void step(){
-		mTime++;
+		
 		try {
 			int mal, vin, zid;
 			
@@ -65,14 +65,15 @@ public class TrafficLightsStatsTL0 implements StepAdvanceListener {
 
 			vin = mEdgeVin.getLastStepVehicleNumber() + mEdgeVin0.getLastStepVehicleNumber();
 
-			mZidStat.add(new StatsPoint<Integer>(mTime-1, zid));
-			mVinStat.add(new StatsPoint<Integer>(mTime-1, vin));
-			mMalStat.add(new StatsPoint<Integer>(mTime-1, mal));
+			mZidStat.add(new StatsPoint<Integer>(mTime, zid));
+			mVinStat.add(new StatsPoint<Integer>(mTime, vin));
+			mMalStat.add(new StatsPoint<Integer>(mTime, mal));
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		mTime++;
 	}
 	
 	
