@@ -29,9 +29,9 @@ public class TrafficLightsStatsTL0 implements StepAdvanceListener {
 			mEdgeZid = repository.getByID("2i");
 			mEdgeVin = repository.getByID("1i");
 			
-			mEdgeMal0 = repository.getByID("3i.150");
-			mEdgeZid0 = repository.getByID("2i.150");
-			mEdgeVin0 = repository.getByID("1i.185");
+			mEdgeMal0 = repository.getByID("3i.450");
+			mEdgeZid0 = repository.getByID("2i.450");
+			mEdgeVin0 = repository.getByID("1i.485");
 			
 			mTime = initTime;
 		} catch (IOException e) {
