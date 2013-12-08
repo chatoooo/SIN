@@ -1,6 +1,7 @@
 package cz.vutbr.fit.sin.tlc.impl;
 
 import java.io.IOException;
+import java.math.RoundingMode;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
@@ -365,7 +366,7 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 			switch(mPhase) {
 				case -1:
 					vVinToZid = mFis.getVariable("gVinToZid").defuzzify();
-					mDuration = (int)(vVinToZid);
+					mDuration = (int) Math.round(vVinToZid);
 					if(mDuration == 0) {
 						mDuration = 1;
 					}
@@ -379,10 +380,10 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 					vZidToMal = mFis.getVariable("gZidToMal").defuzzify();
 					vMalToZid = mFis.getVariable("gMalToZid").defuzzify();
 					if(vZidToMal > vMalToZid) {
-						mDuration = (int)vZidToMal;
+						mDuration = (int) Math.round(vZidToMal);
 					}
 					else {
-						mDuration = (int)vMalToZid;
+						mDuration = (int) Math.round(vMalToZid);
 					}
 					mPhase = 2;
 					break;
@@ -392,7 +393,7 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 					break;
 				case 3: // zidToMal - yellow, malToZid - green, malToVin - green
 					vMalToVin = mFis.getVariable("gMalToVin").defuzzify();
-					mDuration = (int)(vMalToVin);
+					mDuration = (int) Math.round(vMalToVin);
 					if(mDuration == 0) {
 						mDuration = 1;
 					}
@@ -403,26 +404,13 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 					mPhase = 5;
 					break;
 				case 5: // zidToMal - red, malToZid - yellow
-					if(occupacy1i == 0) {
-						vZidToMal = mFis.getVariable("gZidToMal").defuzzify();
-						vMalToZid = mFis.getVariable("gMalToZid").defuzzify();
-						if(vZidToMal > vMalToZid) {
-							mDuration = (int)vZidToMal;
-						}
-						else {
-							mDuration = (int)vMalToZid;
-						}
-						
-						mPhase = 2;
+					vVinToZid = mFis.getVariable("gVinToZid").defuzzify();
+					mDuration = (int) Math.round(vVinToZid);
+					System.out.println(step + ";" + Math.round(occupacy1i) + ";" + (int) Math.round(mDuration));
+					if(mDuration == 0) {
+						mDuration = 1;
 					}
-					else {
-						vVinToZid = mFis.getVariable("gVinToZid").defuzzify();
-						mDuration = (int)(vVinToZid);
-						if(mDuration == 0) {
-							mDuration = 1;
-						}
-						mPhase = 0;
-					}
+					mPhase = 0;
 					break;
 			}
 			LightState[] lightsState = PHASES[mPhase];
