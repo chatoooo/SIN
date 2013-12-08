@@ -20,34 +20,33 @@ END_VAR
 // fuzzyfikace
 FUZZIFY zidToMal
     TERM short := (0, 1) (20, 1) (25, 0); 
-    TERM medium := (20, 0) (24, 1) (70, 1) (75, 0);
-    TERM long := (70, 0) (75, 1) (100, 1);
+    TERM medium := (20, 0) (24, 1) (40, 1) (45, 0);
+    TERM long := (40, 0) (45, 1) (100, 1);
 END_FUZZIFY
 
 FUZZIFY malToZid
     TERM short := (0, 1) (20, 1) (25, 0); 
-    TERM medium := (20, 0) (24, 1) (70, 1) (75, 0);
-    TERM long := (70, 0) (75, 1) (100, 1);
+    TERM medium := (20, 0) (24, 1) (40, 1) (45, 0);
+    TERM long := (40, 0) (45, 1) (100, 1);
 END_FUZZIFY
 
 FUZZIFY vinToZid
     TERM short := (0, 1) (20, 1) (25, 0); 
-    TERM medium := (20, 0) (24, 1) (70, 1) (75, 0);
-    TERM long := (70, 0) (75, 1) (100, 1);
+    TERM medium := (20, 0) (24, 1) (40, 1) (45, 0);
+    TERM long := (40, 0) (45, 1) (100, 1);
 END_FUZZIFY
 
 FUZZIFY malToVin
     TERM short := (0, 1) (20, 1) (25, 0); 
-    TERM medium := (20, 0) (24, 1) (70, 1) (75, 0);
-    TERM long := (70, 0) (75, 1) (100, 1);
+    TERM medium := (20, 0) (24, 1) (40, 1) (45, 0);
+    TERM long := (40, 0) (45, 1) (100, 1);
 END_FUZZIFY
-
 
 // defuzzyfikace
 DEFUZZIFY gZidToMal
     TERM gShort := (5,0) (15,1) (25,0);
 	TERM gMedium := (15,0) (25,1) (35,0);
-	TERM gLong := (25,0) (35,1) (45,0);
+	TERM gLong := (25,0) (45,1) (55,0);
 	METHOD : COG;
 	DEFAULT := 15;
 END_DEFUZZIFY
@@ -55,7 +54,7 @@ END_DEFUZZIFY
 DEFUZZIFY gMalToZid
     TERM gShort := (5,0) (15,1) (25,0);
 	TERM gMedium := (15,0) (25,1) (35,0);
-	TERM gLong := (25,0) (35,1) (45,0);
+	TERM gLong := (25,0) (45,1) (55,0);
 	METHOD : COG;
 	DEFAULT := 15;
 END_DEFUZZIFY

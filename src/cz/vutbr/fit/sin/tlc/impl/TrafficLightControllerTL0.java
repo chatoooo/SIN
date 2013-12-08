@@ -15,10 +15,12 @@ import cz.vutbr.fit.sin.tlc.BaseTrafficLightsControler;
 public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 	
 	final static int MOVING_AVG_VALUES = 30;
+	final static int YELLOW_TIME = 3;
 	final static String FUZZY_FILE = "fcl/Crossroad.fcl";
 	private FIS mFis;
 	private int mPhase = 0;
 	private int mDuration = 0;
+	private int step = 0;
 	
 	private boolean mEnabled = true;
 	
@@ -344,11 +346,16 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 		recordOccupancy();
 		
 		if(mDuration == 0) {
+			double occupacy2i = get2iOccupancy();
+			double occupacy3i = get3iOccupancy();
+			double occupacy1i = get1iOccupancy();
+			double occupacy3ito1 = get3ito1oOccupancy();
+			
 			// Set inputs for Fuzzyfication
-	        mFis.setVariable("zidToMal", get2iOccupancy());
-	        mFis.setVariable("malToZid", get3iOccupancy());
-	        mFis.setVariable("vinToZid", get1iOccupancy());
-	        mFis.setVariable("malToVin", get3ito1oOccupancy());
+	        mFis.setVariable("zidToMal", occupacy2i);
+	        mFis.setVariable("malToZid", occupacy3i);
+	        mFis.setVariable("vinToZid", occupacy1i);
+	        mFis.setVariable("malToVin", occupacy3ito1);
 			
 	        // Evaluate Fuzzy
 	        mFis.evaluate();
@@ -374,10 +381,10 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 					mPhase = 2;
 					break;
 				case 2:	// zidToMal - green, malToZid - green
-				    mDuration = 3;
+				    mDuration = YELLOW_TIME;
 					mPhase = 3;
 					break;
-				case 3: // zidToMal - yellow, malToZid - green, malToVin - green 
+				case 3: // zidToMal - yellow, malToZid - green, malToVin - green
 					vMalToVin = mFis.getVariable("gMalToVin").defuzzify();
 					mDuration = (int)(vMalToVin);
 					if(mDuration == 0) {
@@ -386,12 +393,15 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 					mPhase = 4;
 					break;
 				case 4:	// zidToMal - red, malToZid - green, malToVin - green
-					mDuration = 3;
+					mDuration = YELLOW_TIME;
 					mPhase = 5;
 					break;
 				case 5: // zidToMal - red, malToZid - yellow
 					vVinToZid = mFis.getVariable("gVinToZid").defuzzify();
 					mDuration = (int)vVinToZid;
+					if(mDuration == 0) {
+						mDuration = 1;
+					}
 					mPhase = 0;
 					break;
 			}
@@ -401,6 +411,7 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 		else {
 			mDuration--;
 		}
+		step++;
 	}
 
 }
