@@ -15,9 +15,9 @@ import cz.vutbr.fit.sin.tlc.BaseTrafficLightsControler;
 
 public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 	
-	final static int MOVING_AVG_VALUES = 30;
-	final static int YELLOW_TIME = 2;
-	final static String FUZZY_FILE = "fcl/Crossroad.fcl";
+	final static int MOVING_AVG_VALUES = 40;
+	final static int YELLOW_TIME = 3;
+	final static String FUZZY_FILE = "fcl/Crossroad2.fcl";
 	private FIS mFis;
 	private int mPhase = -1;
 	private int mDuration = 0;
@@ -292,38 +292,33 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 	}
 	
 	private double get2iOccupancy() {
-		double occupancy2_0_20 = movingAverange(mLoop2_0_20Occupancy);
+		double occupancy2_1_20 = movingAverange(mLoop2_1_20Occupancy);
 	    double occupancy2_0_50 = movingAverange(mLoop2_0_50Occupancy);
 	    double occupancy2_0_100 = movingAverange(mLoop2_0_100Occupancy);
-	    double occupancy2_1_20 = movingAverange(mLoop2_1_20Occupancy);
-	    double occupancy2_1_50 = movingAverange(mLoop2_1_50Occupancy);
-	    double occupancy2_1_100 = movingAverange(mLoop2_1_100Occupancy);
+	    double occupancy2_2_20 = movingAverange(mLoop2_2_20Occupancy);
+	    double occupancy2_1_50 = movingAverange(mLoop2_0_50Occupancy);
+	    double occupancy2_1_100 = movingAverange(mLoop2_0_100Occupancy);
 	    
-	    double occupancy2_0 = occupancy2_0_20 + occupancy2_0_50 + occupancy2_0_100;
-	    double occupancy2_1 = occupancy2_1_20 + occupancy2_1_50 + occupancy2_1_100;
+	    double occupancy2_0 = occupancy2_1_20 + occupancy2_0_50 + occupancy2_0_100;
+	    double occupancy2_1 = occupancy2_2_20 + occupancy2_1_50 + occupancy2_1_100;
 		
 		return (occupancy2_0 + occupancy2_1) / 6;
 	}
 	
     private double get2ito1oOccupancy() {
+    	double occupancy2_0_20 = movingAverange(mLoop2_2_20Occupancy);
     	double occupancy2_0_50 = movingAverange(mLoop2_0_50Occupancy);
 	    double occupancy2_0_100 = movingAverange(mLoop2_0_100Occupancy);
-	    double occupancy2_1_50 = movingAverange(mLoop2_1_50Occupancy);
-	    double occupancy2_1_100 = movingAverange(mLoop2_1_100Occupancy);
-	    double occupancy2_2_20 = movingAverange(mLoop2_2_20Occupancy);
 	    
-	    double occupancy2_0 = occupancy2_0_50 + occupancy2_0_100;
-	    double occupancy2_1 = occupancy2_1_50 + occupancy2_1_100;
-	    
-	    return (occupancy2_2_20 + occupancy2_0 + occupancy2_1) / 5;
+	    return (occupancy2_0_20 + occupancy2_0_50 + occupancy2_0_100) / 3;
 	}
 	
 	private double get3ito1oOccupancy() {
-	    double occupancy3_0_50 = movingAverange(mLoop3_0_50Occupancy);
-	    double occupancy3_0_100 = movingAverange(mLoop3_0_100Occupancy);
+	    double occupancy3_1_50 = movingAverange(mLoop3_1_50Occupancy);
+	    double occupancy3_1_100 = movingAverange(mLoop3_1_100Occupancy);
 	    double occupancy3_2_20 = movingAverange(mLoop3_2_20Occupancy);
 		
-		return (occupancy3_2_20 + occupancy3_0_50 + occupancy3_0_100) / 3;
+		return (occupancy3_2_20 + occupancy3_1_50 + occupancy3_1_100) / 3;
 	}
 	
 	private double get1iOccupancy(){
@@ -335,6 +330,36 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 	    double occupancy1_1_20_avg = (occupancy1_1_20 + occupancy1_2_20) / 2;
 	    
 		return (occupancy1_1_20_avg + occupancy1_1_50 + occupancy1_1_100) / 3;
+	}
+	
+	private void phaseVinZid() {
+		double vVinToZid = mFis.getVariable("gVinToZid").defuzzify();
+		mDuration = (int) Math.round(vVinToZid);
+		if(mDuration == 0) {
+			mDuration = 1;
+		}
+	}
+	
+	private void phaseZidMal() {
+		double vZidToMal = mFis.getVariable("gZidToMal").defuzzify();
+		double vMalToZid = mFis.getVariable("gMalToZid").defuzzify();
+		if(vZidToMal > vMalToZid) {
+			mDuration = (int) Math.round(vZidToMal);
+		}
+		else {
+			mDuration = (int) Math.round(vMalToZid);
+		}
+		if(mDuration == 0) {
+			mDuration = 1;
+		}
+	}
+	
+	private void phaseZidVin() {
+		double vMalToVin = mFis.getVariable("gMalToVin").defuzzify();
+		mDuration = (int) Math.round(vMalToVin);
+		if(mDuration == 0) {
+			mDuration = 1;
+		}
 	}
 	
 	@Override
@@ -350,6 +375,7 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 			double occupacy2i = get2iOccupancy();
 			double occupacy3i = get3iOccupancy();
 			double occupacy1i = get1iOccupancy();
+			double occupacy2ito1 = get2ito1oOccupancy();
 			double occupacy3ito1 = get3ito1oOccupancy();
 			
 			// Set inputs for Fuzzyfication
@@ -361,55 +387,57 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 	        // Evaluate Fuzzy
 	        mFis.evaluate();
 	        
-	        double vZidToMal, vMalToZid, vVinToZid, vMalToVin;
-	        
 			switch(mPhase) {
 				case -1:
-					vVinToZid = mFis.getVariable("gVinToZid").defuzzify();
-					mDuration = (int) Math.round(vVinToZid);
-					if(mDuration == 0) {
-						mDuration = 1;
-					}
+					phaseVinZid();
 					mPhase = 0;
 					break;
 				case 0:	// vinToZid - green
-					mDuration = YELLOW_TIME;
-					mPhase = 1;
-					break;
-				case 1: // vinToZid - yellow, zidToVin - green
-					vZidToMal = mFis.getVariable("gZidToMal").defuzzify();
-					vMalToZid = mFis.getVariable("gMalToZid").defuzzify();
-					if(vZidToMal > vMalToZid) {
-						mDuration = (int) Math.round(vZidToMal);
+					if(occupacy2i == 0 && occupacy2ito1 == 0 && occupacy3i == 0 && occupacy3ito1 == 0) {
+						phaseVinZid();
+						mPhase = 0;
 					}
 					else {
-						mDuration = (int) Math.round(vMalToZid);
+						mDuration = YELLOW_TIME;
+						mPhase = 1;
 					}
+					break;
+				case 1: // vinToZid - yellow, zidToVin - green
+					phaseZidMal();
 					mPhase = 2;
 					break;
 				case 2:	// zidToMal - green, malToZid - green
-				    mDuration = YELLOW_TIME;
-					mPhase = 3;
+					if(occupacy1i == 0 && occupacy3ito1 == 0) {
+						phaseZidMal();
+						mPhase = 1;
+					}
+					else {
+						mDuration = YELLOW_TIME;
+						mPhase = 3;
+					}
 					break;
 				case 3: // zidToMal - yellow, malToZid - green, malToVin - green
-					vMalToVin = mFis.getVariable("gMalToVin").defuzzify();
-					mDuration = (int) Math.round(vMalToVin);
-					if(mDuration == 0) {
-						mDuration = 1;
+					if(occupacy3ito1 == 0) {
+						mDuration = YELLOW_TIME;
+						mPhase = 5;
 					}
-					mPhase = 4;
+					else {
+						phaseZidVin();
+						mPhase = 4;
+					}
 					break;
 				case 4:	// zidToMal - red, malToZid - green, malToVin - green
-					mDuration = YELLOW_TIME;
-					mPhase = 5;
-					break;
-				case 5: // zidToMal - red, malToZid - yellow
-					vVinToZid = mFis.getVariable("gVinToZid").defuzzify();
-					mDuration = (int) Math.round(vVinToZid);
-					System.out.println(step + ";" + Math.round(occupacy1i) + ";" + (int) Math.round(mDuration));
-					if(mDuration == 0) {
-						mDuration = 1;
+					if(occupacy1i == 0) {
+						phaseZidMal();
+						mPhase = 2;
 					}
+					else {
+						mDuration = YELLOW_TIME;
+						mPhase = 5;
+					}
+					break;
+				case 5: // zidToMal - red, malToZid - yellow	
+					phaseVinZid();
 					mPhase = 0;
 					break;
 			}
