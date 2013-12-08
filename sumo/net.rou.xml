@@ -82,6 +82,11 @@
   <flow id="flowPeak1_4" type="CarD" route="route1" begin="308" end="700" period="10" departLane="random"/>
   <flow id="flowPeak1_8" type="CarD" route="route6" begin="308" end="700" period="50" departLane="random"/>
   
+  <flow id="flowPeak3_1" type="CarA" route="route6" begin="310" end="700" period="30" departLane="random"/>
+  <flow id="flowPeak3_2" type="CarB" route="route6" begin="315" end="700" period="30" departLane="random"/>
+  <flow id="flowPeak3_3" type="CarC" route="route6" begin="320" end="700" period="30" departLane="random"/>
+  <flow id="flowPeak3_4" type="CarD" route="route6" begin="325" end="700" period="30" departLane="random"/>
+  
   <flow id="flowPeak2_1" type="CarA" route="route3" begin="602" end="1000" period="15" departLane="random"/>
   <flow id="flowPeak2_2" type="CarB" route="route3" begin="604" end="1000" period="15" departLane="random"/>
   <flow id="flowPeak2_5" type="CarA" route="route4" begin="604" end="1000" period="40" departLane="random"/>
@@ -90,4 +95,10 @@
   <flow id="flowPeak2_6" type="CarB" route="route4" begin="608" end="1000" period="40" departLane="random"/>
   <flow id="flowPeak2_7" type="CarC" route="route4" begin="612" end="1000" period="40" departLane="random"/>
   <flow id="flowPeak2_8" type="CarD" route="route4" begin="616" end="1000" period="40" departLane="random"/>
+
+  <flow id="flowPeak4_1" type="CarA" route="route6" begin="1210" end="1500" period="30" departLane="random"/>
+  <flow id="flowPeak4_2" type="CarB" route="route6" begin="1215" end="1500" period="30" departLane="random"/>
+  <flow id="flowPeak4_3" type="CarC" route="route6" begin="1220" end="1500" period="30" departLane="random"/>
+  <flow id="flowPeak4_4" type="CarD" route="route6" begin="1225" end="1500" period="30" departLane="random"/>
+
 </routes>
