@@ -7,33 +7,33 @@
   <vType accel="1.0" decel="5.0" id="CarD" length="5.0" minGap="2.5" maxSpeed="30.0" sigma="0.5" />
   <vType id="BUS" accel="2.6" decel="4.5" guiShape="bus" sigma="0.5" length="15" maxspeed="70" color="1,1,0"/>
   
-  <route id="route1" edges="2i 2i.150 3o"/>
-  <route id="route2" edges="2i 2i.150 1o"/>
-  <route id="route3" edges="3i 3i.150 2o"/>
-  <route id="route4" edges="3i 3i.150 1o"/>
-  <route id="route5" edges="1i 1i.185 2o"/>
-  <route id="route6" edges="1i 1i.185 3o"/>
+  <route id="route1" edges="2i 2i.450 3o"/>
+  <route id="route2" edges="2i 2i.450 1o"/>
+  <route id="route3" edges="3i 3i.450 2o"/>
+  <route id="route4" edges="3i 3i.450 1o"/>
+  <route id="route5" edges="1i 1i.485 2o"/>
+  <route id="route6" edges="1i 1i.485 3o"/>
   
-  <route id="bus_route1" edges="1i 1i.185 3o">
+  <route id="bus_route1" edges="1i 1i.485 3o">
     <stop busStop="busstop1" duration="10" />
     <stop busStop="busstop4" duration="15" />
   </route>
-  <route id="bus_route2" edges="1i 1i.185 2o">
+  <route id="bus_route2" edges="1i 1i.485 2o">
     <stop busStop="busstop1" duration="10" />
     <stop busStop="busstop3" duration="10" />
   </route>
-  <route id="bus_route3" edges="3i 3i.150 2o">
+  <route id="bus_route3" edges="3i 3i.450 2o">
     <stop busStop="busstop2" duration="10" />
     <stop busStop="busstop3" duration="10" />
   </route>
-  <route id="bus_route4" edges="3i 3i.150 1o">
+  <route id="bus_route4" edges="3i 3i.450 1o">
     <stop busStop="busstop2" duration="10" />
     <stop busStop="busstop5" duration="10" />
   </route>
-  <route id="bus_route5" edges="2i 2i.150 1o">
+  <route id="bus_route5" edges="2i 2i.450 1o">
     <stop busStop="busstop5" duration="10" />
   </route>
-  <route id="bus_route6" edges="2i 2i.150 3o">
+  <route id="bus_route6" edges="2i 2i.450 3o">
     <stop busStop="busstop4" duration="10" />
   </route>
 
