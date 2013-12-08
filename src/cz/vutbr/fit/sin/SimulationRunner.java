@@ -42,7 +42,7 @@ public class SimulationRunner {
 				
 				con.addStepAdvanceListener(mIntelligentStats);
 				con.addStepAdvanceListener(controler);
-				for(int i = 0;i<900;i++){
+				for(int i = 0;i<2700;i++){
 					con.nextSimStep();
 					processBuffers();
 				}
@@ -70,7 +70,7 @@ public class SimulationRunner {
 				mStaticStats = new TrafficLightsStatsTL0(con.getEdgeRepository(),0);
 				
 				con.addStepAdvanceListener(mStaticStats);
-				for(int i = 0;i<900;i++){
+				for(int i = 0;i<2700;i++){
 					con.nextSimStep();
 					processBuffers();
 				}
