@@ -1,0 +1,110 @@
+// Block definition (there may be more than one block per file)
+FUNCTION_BLOCK Crossroad
+
+// Definice vstupu - procentualni obsazeni indukcnich smycek
+VAR_INPUT				
+	zidToMal : REAL;	// Zidenice -> Malomerice
+	malToZid : REAL;	// Malomerice -> Zidenice 
+	vinToZid : REAL;	// Vinohrady -> Zidenice
+	malToVin : REAL;	// Malomerice -> odbocka Vinohrady
+END_VAR
+
+// Definice vystupnich hodnot
+VAR_OUTPUT
+    gZidToMal : REAL;  // doba zelene na semaforu Zidenice -> Malomerice
+    gMalToZid : REAL;  // doba zelene na semaforu Malomerice -> Zidenice
+    gVinToZid : REAL;  // doba zelene na semaforu Vinohrady -> Zidenice
+    gMalToVin : REAL;  // doba zelene na semaforu Malomerice -> odbocka Vinohrady
+END_VAR
+
+// fuzzyfikace
+FUZZIFY zidToMal
+    TERM short := (0, 1) (20, 1) (25, 0); 
+    TERM medium := (20, 0) (24, 1) (40, 1) (45, 0);
+    TERM long := (40, 0) (45, 1) (100, 1);
+END_FUZZIFY
+
+FUZZIFY malToZid
+    TERM short := (0, 1) (20, 1) (25, 0); 
+    TERM medium := (20, 0) (24, 1) (40, 1) (45, 0);
+    TERM long := (40, 0) (45, 1) (100, 1);
+END_FUZZIFY
+
+FUZZIFY vinToZid
+    TERM short := (0, 1) (15, 1) (20, 0); 
+    TERM medium := (15, 0) (20, 1) (35, 1) (40, 0);
+    TERM long := (35, 0) (40, 1) (100, 1);
+END_FUZZIFY
+
+FUZZIFY malToVin
+    TERM short := (0, 1) (20, 1) (25, 0); 
+    TERM medium := (20, 0) (24, 1) (40, 1) (45, 0);
+    TERM long :=  (40, 0) (45, 1) (100, 1);
+END_FUZZIFY
+
+// defuzzyfikace
+DEFUZZIFY gZidToMal
+    TERM gShort := (5,0) (13,1) (20,0);
+	TERM gMedium := (13,0) (20,1) (27,0);
+	TERM gLong := (20,0) (30,1) (40,0);
+	METHOD : COG;
+	DEFAULT := 13;
+END_DEFUZZIFY
+
+DEFUZZIFY gMalToZid
+    TERM gShort := (5,0) (13,1) (20,0);
+	TERM gMedium := (13,0) (20,1) (27,0);
+	TERM gLong := (20,0) (30,1) (40,0);
+	METHOD : COG;
+	DEFAULT := 13;
+END_DEFUZZIFY
+
+DEFUZZIFY gVinToZid
+    TERM gShort := (7,0) (16,1) (25,0);
+	TERM gMedium := (16,0) (23,1) (27,0);
+	TERM gLong := (20,0) (27,1) (34,0);
+	METHOD : COG;
+	DEFAULT := 15;
+END_DEFUZZIFY
+
+DEFUZZIFY gMalToVin
+    TERM gShort := (4,0) (12,1) (19,0);
+	TERM gMedium := (12,0) (19,1) (26,0);
+	TERM gLong := (19,0) (26,1) (33,0);
+	METHOD : COG;
+	DEFAULT := 12;
+END_DEFUZZIFY
+
+
+// blok pravidel
+RULEBLOCK Rule1
+	AND : MIN;	// and
+	ACT : MIN;	// aktivacni metoda
+	ACCU : MAX;	// akumulacni metody
+
+	// smer Vinohrandy -> Zidenice
+	RULE 1 : IF vinToZid IS short THEN gVinToZid IS gShort;
+	RULE 2 : IF vinToZid IS medium THEN gVinToZid IS gMedium;
+	RULE 3 : IF vinToZid IS long THEN gVinToZid IS gLong;
+	
+	// smer Zidenice -> Malomerice
+	RULE 4 : IF zidToMal IS short THEN gZidToMal IS gShort;
+	RULE 5 : IF zidToMal IS medium THEN gZidToMal IS gMedium;
+	RULE 6 : IF zidToMal IS long THEN gZidToMal IS gLong;
+	
+	// smer Malomerice -> Zidenice
+	RULE 7 : IF malToZid IS short THEN gMalToZid IS gShort;
+	RULE 8 : IF malToZid IS medium THEN gMalToZid IS gMedium;
+	RULE 9 : IF malToZid IS long THEN gMalToZid IS gLong;
+	//RULE 10 : IF zidToMal IS medium AND malToZid IS short OR malToZid IS medium THEN gMalToZid IS gMedium;
+	//RULE 11 : IF zidToMal IS medium AND malToZid IS long THEN gMalToZid IS gLong;
+	//RULE 12 : IF zidToMal IS long THEN gMalToZid IS gLong;
+	
+	// Malomerice -> odbocka Vinohrady
+	RULE 13 : IF malToVin IS short THEN gMalToVin IS gShort;
+	RULE 14 : IF malToZid IS medium THEN gMalToVin IS gMedium;
+	RULE 25 : IF malToZid IS long THEN gMalToVin IS gLong;
+	
+END_RULEBLOCK	
+	
+END_FUNCTION_BLOCK
