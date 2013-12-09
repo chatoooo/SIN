@@ -17,7 +17,7 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 	
 	final static int MOVING_AVG_VALUES = 40;
 	final static int YELLOW_TIME = 3;
-	final static String FUZZY_FILE = "fcl/Crossroad2.fcl";
+	final static String FUZZY_FILE = "fcl/Crossroad3.fcl";
 	private FIS mFis;
 	private int mPhase = -1;
 	private int mDuration = 0;
