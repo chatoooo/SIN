@@ -105,7 +105,7 @@ RULEBLOCK Rule1
 	RULE 14 : IF malToVin IS medium THEN gMalToVin IS gMedium;
 	RULE 15 : IF malToVin IS long THEN gMalToVin IS gLong;
 	
-	
+	// ucpana krizovatka
 	RULE 16 : IF vinToZid IS long AND zidToMal IS long AND malToZid IS long AND malToVin IS long THEN gVinToZid IS gMedium;
 	RULE 17 : IF vinToZid IS long AND zidToMal IS long AND malToZid IS long AND malToVin IS long THEN gZidToMal IS gMedium;
 	RULE 18 : IF vinToZid IS long AND zidToMal IS long AND malToZid IS long AND malToVin IS long THEN gMalToZid IS gMedium;
