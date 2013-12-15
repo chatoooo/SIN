@@ -44,7 +44,7 @@ public class SimulationRunner {
 				con.addStepAdvanceListener(controler);
 				for(int i = 0;i<3600;i++){
 					con.nextSimStep();
-					processBuffers();
+					showProgress("Adaptive", i, 3599);
 				}
 				con.removeStepAdvanceListener(mIntelligentStats);
 				con.removeStepAdvanceListener(controler);
@@ -62,6 +62,11 @@ public class SimulationRunner {
 		
 	}
 	
+	public void showProgress(String title, int progress, int max){
+		System.out.print("\r"+title +": ");
+		System.out.print((int)((progress/(float)(max))*100));
+		System.out.print("%");
+	}
 	
 	public void runStatic() {
 		if(startSumo()) {
@@ -72,8 +77,9 @@ public class SimulationRunner {
 				con.addStepAdvanceListener(mStaticStats);
 				for(int i = 0;i<3600;i++){
 					con.nextSimStep();
-					processBuffers();
+					showProgress("Static", i, 3599);
 				}
+				System.out.println();
 				con.removeStepAdvanceListener(mStaticStats);
 				con.close();
 			} catch (InterruptedException e) {
@@ -86,10 +92,6 @@ public class SimulationRunner {
 			
 			stopSumo();
 		}
-		
-	}
-	
-	private void processBuffers(){
 		
 	}
 	
