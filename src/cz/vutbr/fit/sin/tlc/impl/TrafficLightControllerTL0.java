@@ -1,7 +1,6 @@
 package cz.vutbr.fit.sin.tlc.impl;
 
 import java.io.IOException;
-import java.math.RoundingMode;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
@@ -13,23 +12,54 @@ import it.polito.appeal.traci.TLState;
 import it.polito.appeal.traci.TrafficLight;
 import cz.vutbr.fit.sin.tlc.BaseTrafficLightsControler;
 
+/**
+ * Trida implementujici radic krizovatky.
+ * Jedna se o krizovatku na Brnenskem okruhu pred Zidenickymi kasarnami s prijezdem z Vinohran.
+ */
 public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 	
+	/**
+	 * Pocet hodnot pro vypocet kouzaveho prumeru obsazeni indukcnich smycek.
+	 */
 	final static int MOVING_AVG_VALUES = 40;
-	final static int YELLOW_TIME = 3;
-	final static String FUZZY_FILE = "fcl/Crossroad3.fcl";
-	private FIS mFis;
-	private int mPhase = -1;
-	private int mDuration = 0;
-	private int step = 0;
 	
+	/**
+	 * Soubor s fuzzy logikou 
+	 */
+	final static String FUZZY_FILE = "fcl/Crossroad3.fcl";
+	
+	/**
+	 * Trida zpracovavajici fuzzy logiku
+	 */
+	private FIS mFis;
+	
+	/**
+	 * Index svetelne faze na semaforech.
+	 */
+	private int mPhase = -1;
+	
+	/**
+	 * Zbyvajici pocet casovych jednotek, aktualni svetelne faze.
+	 */
+	private int mDuration = 0;
+	
+	/**
+	 * Priznak aktivace rizeni krizovatky.
+	 */
 	private boolean mEnabled = true;
 	
+	/**
+	 * Indukcni smycky na 1. prijezdu (od Vinohrad) do krizovatky.
+	 * Znaceni r_l_d, kde r - cislo silnice, l - cislo pruhu, d - vzdalenost od krozovatky
+	 */
 	private InductionLoop mLoop1_1_20;
 	private InductionLoop mLoop1_1_50;
 	private InductionLoop mLoop1_1_100;	
 	private InductionLoop mLoop1_2_20;
 	
+	/**
+	 * Indukcni smycky na 2. prijezdu (z Zidenic) do krizovatky.
+	 */
 	private InductionLoop mLoop2_0_20;
 	private InductionLoop mLoop2_0_50;
 	private InductionLoop mLoop2_0_100;
@@ -38,6 +68,9 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 	private InductionLoop mLoop2_1_100;
 	private InductionLoop mLoop2_2_20;
 	
+	/**
+	 * Indukcni smycky na 3. prijezdu (z Malomeric) do krizovatky.
+	 */
 	private InductionLoop mLoop3_0_20;
 	private InductionLoop mLoop3_0_50;
 	private InductionLoop mLoop3_0_100;
@@ -46,13 +79,22 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 	private InductionLoop mLoop3_1_100;
 	private InductionLoop mLoop3_2_20;
 	
-	private int mCount = 0;
+	/**
+	 * Pocet hodnot obsazenosti indukcnich smycek pro vypocet prumerne obsazenosti. 
+	 */
+	private int mMeanValues = 0;
 	
+	/**
+	 * Obsazenost cidel na 1. prijezdu.
+	 */
 	private Queue<Double> mLoop1_1_20Occupancy = new ArrayDeque<Double>();
 	private Queue<Double> mLoop1_1_50Occupancy = new ArrayDeque<Double>();
 	private Queue<Double> mLoop1_1_100Occupancy = new ArrayDeque<Double>();
 	private Queue<Double> mLoop1_2_20Occupancy = new ArrayDeque<Double>();
 	
+	/**
+	 * Obsazenost cidel na 2. prijezdu.
+	 */
 	private Queue<Double> mLoop2_0_20Occupancy = new ArrayDeque<Double>();
 	private Queue<Double> mLoop2_0_50Occupancy = new ArrayDeque<Double>();
 	private Queue<Double> mLoop2_0_100Occupancy = new ArrayDeque<Double>();
@@ -61,14 +103,20 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 	private Queue<Double> mLoop2_1_100Occupancy = new ArrayDeque<Double>();
 	private Queue<Double> mLoop2_2_20Occupancy = new ArrayDeque<Double>();
 	
+	/**
+	 * Obsazenost cidel na 3. prijezdu.
+	 */
 	private Queue<Double> mLoop3_0_20Occupancy = new ArrayDeque<Double>();
 	private Queue<Double> mLoop3_0_50Occupancy = new ArrayDeque<Double>();
 	private Queue<Double> mLoop3_0_100Occupancy = new ArrayDeque<Double>();
 	private Queue<Double> mLoop3_1_20Occupancy = new ArrayDeque<Double>();
 	private Queue<Double> mLoop3_1_50Occupancy = new ArrayDeque<Double>();
 	private Queue<Double> mLoop3_1_100Occupancy = new ArrayDeque<Double>();
-	private Queue<Double> mLoop3_2_20Occupancy = new ArrayDeque<Double>();
+	private Queue<Double> mLoop3_2_20Occupancy= new ArrayDeque<Double>();
 	
+	/**
+	 * Svetelne faze pro semafory.
+	 */
 	private static final LightState[][] PHASES = new LightState[][] {
 		// phase 0 - vinToZid - green
 		new LightState[] {
@@ -144,27 +192,50 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 		},
 	};
 	
+	/**
+	 * Konstruktor 
+	 * @param light Rizena sada semaforu.
+	 * @param repository Repozitar indkucnich smycek rizene krizovatky.
+	 */
 	public TrafficLightControllerTL0(TrafficLight light, Repository<InductionLoop> repository) {
 		super(light);
+		// inicializace fuzzy
 		initFuzzy();
+		// inicializace indkucnich smycek
 		initLoops(repository);
 		
 	}
 	
+	/**
+	 * Konstruktor s uvedenim pocatecniho casu rizeni.
+	 * @param light Rizena sada semaforu.
+	 * @param repository Repozitar indkucnich smycek rizene krizovatky.
+	 * @param initTime Pocatecni cas rizeni.
+	 */
 	public TrafficLightControllerTL0(TrafficLight light, Repository<InductionLoop> repository, int initTime) {
 		super(light, initTime);
 		initFuzzy();
 		initLoops(repository);
 	}
 	
+	/**
+	 * Povoleni fuzzy rizeni krizovatky.
+	 */
 	public void enable(){
 		mEnabled = true;
 	}
 	
+	/**
+	 * Zakazani fuzzy rizeni krizovatky.
+	 */
 	public void disable(){
 		mEnabled = false;
 	}
 	
+	/**
+	 * Ziskani indukcnich smycek z reporitare.
+	 * @param repository Repositar indukcnich smycek.
+	 */
 	private void initLoops(Repository<InductionLoop> repository){
 		try {
 			mLoop1_1_20 = repository.getByID("loop1_1_20");
@@ -192,7 +263,11 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 		}
 	}
 	
-	private void initFuzzy() {	
+	/**
+	 * Inicializace fuzzy rizeni
+	 */
+	private void initFuzzy() {
+		// nacteni souboru s fuzzy control language
 		mFis = FIS.load(FUZZY_FILE);
 		
 		if(mFis == null) {
@@ -200,19 +275,28 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 			return;
 		}
 		
+		// nastavime provni svetelnou fazi na semaforech
 		setTrafficLights(PHASES[0]);
 	}
 	
+	/**
+	 * Nastavim svetelou fazi na semaforech.
+	 * @param lightsState Svetelna faze.
+	 */
 	private void setTrafficLights(LightState[] lightsState) {
 		TLState tlState = new TLState(lightsState);
 		try {
 			mTrafficLight.changeLightsState(tlState);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
+	/**
+	 * Vypocet prumeru z poslednich x hodnot.
+	 * @param queue
+	 * @return
+	 */
 	private static double movingAverange(Queue<Double> queue) {
 		double sum = 0;
 		for(Double d : queue) {
@@ -224,8 +308,11 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 		return sum/MOVING_AVG_VALUES;
 	}
 	
+	/**
+	 * Zaznamena obsazeni indukcnich smycek.
+	 */
 	private void recordOccupancy() {
-		if(mCount == MOVING_AVG_VALUES) {
+		if(mMeanValues == MOVING_AVG_VALUES) {
 			mLoop1_1_20Occupancy.remove();
 			mLoop1_1_50Occupancy.remove();
 			mLoop1_1_100Occupancy.remove();
@@ -247,7 +334,7 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 			mLoop3_1_100Occupancy.remove();
 			mLoop3_2_20Occupancy.remove();
 			
-			mCount--;
+			mMeanValues--;
 		}
 		try {
 			mLoop1_1_20Occupancy.add(new Double(mLoop1_1_20.getLastStepOccupancy()));
@@ -271,12 +358,16 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 			mLoop3_1_100Occupancy.add(new Double(mLoop3_1_100.getLastStepOccupancy()));
 			mLoop3_2_20Occupancy.add(new Double(mLoop3_2_20.getLastStepOccupancy()));
 			
-			mCount++;
+			mMeanValues++;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
+	/**
+	 * Obsazenost indukcnich smycek ve smeru rovne na 3. prijezdu.
+	 * @return Obsazenot indukcnich cidel.
+	 */
 	private double get3iOccupancy() {
 	    double occupancy3_0_20 = movingAverange(mLoop3_0_20Occupancy);
 	    double occupancy3_0_50 = movingAverange(mLoop3_0_50Occupancy);
@@ -291,6 +382,10 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 		return (occupancy3_0 + occupancy3_1) / 6;
 	}
 	
+	/**
+	 * Obsazenost indukcnich smycek ve smeru rovne na 2. prijezdu.
+	 * @return Obsazenot indukcnich cidel.
+	 */
 	private double get2iOccupancy() {
 		double occupancy2_1_20 = movingAverange(mLoop2_1_20Occupancy);
 	    double occupancy2_0_50 = movingAverange(mLoop2_0_50Occupancy);
@@ -305,6 +400,10 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 		return (occupancy2_0 + occupancy2_1) / 6;
 	}
 	
+	/**
+	 * Obsazenost indukcnich smycek na 2. prijezdu odbocka na silnici c. 1.
+	 * @return Obsazenot indukcnich cidel.
+	 */
     private double get2ito1oOccupancy() {
     	double occupancy2_0_20 = movingAverange(mLoop2_2_20Occupancy);
     	double occupancy2_0_50 = movingAverange(mLoop2_0_50Occupancy);
@@ -313,6 +412,10 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 	    return (occupancy2_0_20 + occupancy2_0_50 + occupancy2_0_100) / 3;
 	}
 	
+    /**
+	 * Obsazenost indukcnich smycek na 3. prijezdu odbocka na silnici c. 1.
+	 * @return Obsazenot indukcnich cidel.
+	 */
 	private double get3ito1oOccupancy() {
 	    double occupancy3_1_50 = movingAverange(mLoop3_1_50Occupancy);
 	    double occupancy3_1_100 = movingAverange(mLoop3_1_100Occupancy);
@@ -321,6 +424,10 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 		return (occupancy3_2_20 + occupancy3_1_50 + occupancy3_1_100) / 3;
 	}
 	
+	/**
+	 * Obsazenost indukcnich smycek ve smeru rovne na 1. prijezdu.
+	 * @return Obsazenot indukcnich cidel.
+	 */
 	private double get1iOccupancy(){
 		double occupancy1_1_20 = movingAverange(mLoop1_1_20Occupancy);
 	    double occupancy1_1_50 = movingAverange(mLoop1_1_50Occupancy);
@@ -332,6 +439,9 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 		return (occupancy1_1_20_avg + occupancy1_1_50 + occupancy1_1_100) / 3;
 	}
 	
+	/**
+	 * Nastavi dobu faze zelene pro Vinohrady -> Zidenice.
+	 */
 	private void phaseVinZid() {
 		double vVinToZid = mFis.getVariable("gVinToZid").defuzzify();
 		mDuration = (int) Math.round(vVinToZid);
@@ -340,6 +450,9 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 		}
 	}
 	
+	/**
+	 * Nastavi dobu faze zelene pro Zidenice -> Malomerice a naopak.
+	 */
 	private void phaseZidMal() {
 		double vZidToMal = mFis.getVariable("gZidToMal").defuzzify();
 		double vMalToZid = mFis.getVariable("gMalToZid").defuzzify();
@@ -354,6 +467,9 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 		}
 	}
 	
+	/**
+	 * Nastavi dobu faze zelene pro Malomerice -> odbocka Vinohrady.
+	 */
 	private void phaseZidVin() {
 		double vMalToVin = mFis.getVariable("gMalToVin").defuzzify();
 		mDuration = (int) Math.round(vMalToVin);
@@ -362,6 +478,9 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 		}
 	}
 	
+	/**
+	 * Provede jeden krok simulace.
+	 */
 	@Override
 	public void step(){
 		super.step();
@@ -369,16 +488,18 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 		if(!mEnabled){
 			return;
 		}
+		// zaznamenani obsazenosti indkucnich smycek
 		recordOccupancy();
 		
 		if(mDuration == 0) {
+			// ziskane obsazenom jednotlivych smeru
 			double occupacy2i = get2iOccupancy();
 			double occupacy3i = get3iOccupancy();
 			double occupacy1i = get1iOccupancy();
 			double occupacy2ito1 = get2ito1oOccupancy();
 			double occupacy3ito1 = get3ito1oOccupancy();
 			
-			// Set inputs for Fuzzyfication
+			// nastavime vstuoni hodnoty pro fuzzyfikaci
 	        mFis.setVariable("zidToMal", occupacy2i);
 	        mFis.setVariable("malToZid", occupacy3i);
 	        mFis.setVariable("vinToZid", occupacy1i);
@@ -394,6 +515,7 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 					break;
 				case 0:	// vinToZid - green
 					if(occupacy2i == 0 && occupacy2ito1 == 0 && occupacy3i == 0 && occupacy3ito1 == 0) {
+						// v ostatnich smerech zadna auta => nebudeme memit svetelnou fazi
 						phaseVinZid();
 						mPhase = 0;
 					}
@@ -402,12 +524,13 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 						mPhase = 1;
 					}
 					break;
-				case 1: // vinToZid - yellow, zidToVin - green
+				case 1: // vinToZid - yellow, zidToVin - green 
 					phaseZidMal();
 					mPhase = 2;
 					break;
-				case 2:	// zidToMal - green, malToZid - green
+				case 2:	// zidToMal - green, malToZid - green, malToVin - green
 					if(occupacy1i == 0 && occupacy3ito1 == 0) {
+						// vinToZid a malToVin zadne auto => nebudeme menit fazi
 						phaseZidMal();
 						mPhase = 1;
 					}
@@ -441,13 +564,13 @@ public class TrafficLightControllerTL0 extends BaseTrafficLightsControler {
 					mPhase = 0;
 					break;
 			}
+			// vyber svetelne faze a jeji nastaveni
 			LightState[] lightsState = PHASES[mPhase];
 			setTrafficLights(lightsState);
 		}
 		else {
 			mDuration--;
 		}
-		step++;
 	}
 
 }

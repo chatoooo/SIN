@@ -16,32 +16,64 @@ import cz.vutbr.fit.sin.tlc.impl.TrafficLightControllerTL0;
 
 public class SimulationRunner {
 
+	/**
+	 * Port pro komunikaci se simulatorem SUMO
+	 */
 	private final int SUMO_PORT = 56789;
+	
+	/**
+	 * Proces simulatoru SUMO.
+	 */
 	private Process mSumoProcess;
 	
+	/**
+	 * Priznak spusteni simulatoru SUMO s GUI.
+	 */
 	private boolean mGui;
 	
+	/**
+	 * Stastika staticky rizene krizovatky.
+	 */
 	private TrafficLightsStatsTL0 mStaticStats;
+	
+	/**
+	 * Stastika krizovatky rizene fuzzy.
+	 */
 	private TrafficLightsStatsTL0 mIntelligentStats;
 	
+	/**
+	 * Logovani informaci
+	 */
 	private static final Logger mLog = Logger.getLogger(SumoTraciConnection.class);
 	
+	/**
+	 * @param gui Priznak spusteni SUMO s GUI.
+	 */
 	public SimulationRunner(boolean gui){
 		mGui = gui;
 	}
 	
+	/**
+	 * Provedeni simulace krizovatky rizene fuzzy.
+	 */
 	public void runControlled() {
 		if(startSumo()) {
 			try {
+				// spojeni se SUMO simulatorem
 				SumoTraciConnection con = new SumoTraciConnection(InetAddress.getLoopbackAddress(), SUMO_PORT);
 				
+				// ziskani sady rizenych semaforu
 				TrafficLight lights = con.getTrafficLightRepository().getByID("0");
+				// repozitar indukcnich smycek
 				Repository<InductionLoop> loops = con.getInductionLoopRepository();
+				
+				// vyroreni radice krizovatky
 				ITrafficLightController controler = new TrafficLightControllerTL0(lights, loops);
 				mIntelligentStats = new TrafficLightsStatsTL0(con.getEdgeRepository(),0);
 				
 				con.addStepAdvanceListener(mIntelligentStats);
 				con.addStepAdvanceListener(controler);
+				// provadeni simulace
 				for(int i = 0;i<3600;i++){
 					con.nextSimStep();
 					showProgress("Adaptive", i, 3599);
@@ -50,10 +82,8 @@ public class SimulationRunner {
 				con.removeStepAdvanceListener(controler);
 				con.close();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -68,6 +98,9 @@ public class SimulationRunner {
 		System.out.print("%");
 	}
 	
+	/**
+	 * Provedeni simulace rizene krizovatky.
+	 */
 	public void runStatic() {
 		if(startSumo()) {
 			try {
@@ -83,10 +116,8 @@ public class SimulationRunner {
 				con.removeStepAdvanceListener(mStaticStats);
 				con.close();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -95,14 +126,26 @@ public class SimulationRunner {
 		
 	}
 	
+	/**
+	 * Ziska statistiku staticky rizene krizovatky.
+	 * @return Statistika o fixnim rizeni krizovatky.
+	 */
 	public TrafficLightsStatsTL0 getStatsIntelligent(){
 		return mIntelligentStats;
 	}
 	
+	/**
+	 * Ziska statistiku fuzzy rizene krizovatky.
+	 * @return Statistika o fuzzy rizeni krizovatky.
+	 */
 	public TrafficLightsStatsTL0 getStatsStatic(){
 		return mStaticStats;
 	}
 	
+	/**
+	 * Spusteni simulatoru SUMO.
+	 * @return True - uspesne spusteni, jinak false
+	 */
 	private boolean startSumo() {
 		
 		String[] argsSumo;
@@ -115,10 +158,10 @@ public class SimulationRunner {
 		}else{
 			
 			argsSumo = new String[] { 
-					"sumo/sumo-0.19.0/bin/sumo", 
-					"-c", "sumo/sim.sumocfg", 
-					"--remote-port", Integer.toString(SUMO_PORT),
-					};
+				"sumo/sumo-0.19.0/bin/sumo", 
+				"-c", "sumo/sim.sumocfg", 
+				"--remote-port", Integer.toString(SUMO_PORT),
+				};
 		}
 		
 		try {
@@ -137,11 +180,13 @@ public class SimulationRunner {
 		return true;
 	}
 	
+	/**
+	 * Ukonceni procesu simulatoru SUMO.
+	 */
 	private void stopSumo() {
 		try {
 			mSumoProcess.waitFor();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
